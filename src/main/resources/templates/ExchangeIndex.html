@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ExchangeIndex</title>
+    <link rel="stylesheet" type="text/css" herf="table.css">
+</head>
+<body>
+
+<table>
+    <thead>
+    <tr>
+        <th>
+            Date
+        </th>
+        <th>
+            USD/NTD
+        </th>
+        <th>
+            RMB/NTD
+        </th>
+        <th>
+            USD/RMB
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:if="${exchangeRates.empty}">
+        <td colspan="2"> No exchangeRates Available </td>
+    </tr>
+    <tr th:each="exchangeRate : ${exchangeRates}">
+        <td><span th:text="${exchangeRate.getDate()}"> Date </span></td>
+        <td><span th:text="${exchangeRate.getUsdToNtd()}"> USD/NTD </span></td>
+        <td><span th:text="${exchangeRate.getRmbToNtd()}"> RMB/NTD </span></td>
+        <td><span th:text="${exchangeRate.getUsdToRmb()}"> USD/RMB </span></td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
