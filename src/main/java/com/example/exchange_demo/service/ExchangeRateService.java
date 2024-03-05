@@ -1,5 +1,6 @@
 package com.example.exchange_demo.service;
 
+import com.example.exchange_demo.advice.exception.CustomException;
 import com.example.exchange_demo.dto.ExchangeRateDTO;
 import com.example.exchange_demo.dto.ResponseExchangeRateDTO;
 import com.example.exchange_demo.model.ExchangeRateDaily;
@@ -37,8 +38,7 @@ public class ExchangeRateService {
     try {
       this.exchangeRateDailyRepository.deleteById(formatter.parse(date));
     } catch (ParseException e) {
-      log.error("ParseException", e);
-      // TODO throw exception
+      throw new CustomException(e.getMessage());
     }
   }
 
@@ -53,15 +53,13 @@ public class ExchangeRateService {
 
     ExchangeRateDTO[] exchangeRates = resEntity.getBody();
 
-    // TODO stream
     for (ExchangeRateDTO exchangeRate: exchangeRates) {
 
       try {
         ExchangeRateDaily tmpExchange = new ExchangeRateDaily(formatter.parse(exchangeRate.getDate()), exchangeRate.getUsdToNtd(), exchangeRate.getRmbToNtd(), exchangeRate.getUsdToRmb());
         this.exchangeRateDailyRepository.save(tmpExchange);
       } catch (ParseException e) {
-        log.error("ParseException: ", e);
-        // TODO throw exception
+        throw new CustomException(e.getMessage());
       }
 
     }
@@ -86,7 +84,7 @@ public class ExchangeRateService {
     SimpleDateFormat responseFormatter = new SimpleDateFormat("yyyy-MM-dd");
 
     if (pageNo <= 0) {
-      // throwException: PageNo 輸入錯誤
+      throw new CustomException("頁數輸入錯誤，應大於0");
     }
 
     PageRequest pageRequest = PageRequest.of(pageNo, size);
@@ -119,11 +117,8 @@ public class ExchangeRateService {
   }
 
   public void update(ExchangeRateDaily exchangeRateDaily) throws Exception {
-    // 判斷該資料是否存在
     if (this.exchangeRateDailyRepository.findById(exchangeRateDaily.getDate()).isEmpty()) {
-      // throwException
-      // TODO 回傳 500 不正常
-      throw new Exception("欲修改之資料不存在");
+      throw new CustomException("欲修改之資料不存在");
     }
 
     this.exchangeRateDailyRepository.save(exchangeRateDaily);

@@ -1,5 +1,6 @@
 package com.example.exchange_demo.controller;
 
+import com.example.exchange_demo.dto.RequestExchangeRateDTO;
 import com.example.exchange_demo.dto.ResponseExchangeRateDTO;
 import com.example.exchange_demo.model.ExchangeRateDaily;
 import com.example.exchange_demo.service.ExchangeRateService;
@@ -65,21 +66,13 @@ public class ExchangeRateController {
   /**
    * 匯率資料表新增API.
    *
-   * @param usdToNtd USD to NTD
-   * @param rmbToNtd RMB to NTD
-   * @param usdToRmb USD to RMB
    * @return Add success message.
    */
   @PostMapping("/add")
   public ResponseEntity<String> addExchangeRate(
-      @RequestParam String date,
-      @RequestParam Float usdToNtd,
-      @RequestParam Float rmbToNtd,
-      @RequestParam Float usdToRmb
-  ) throws ParseException {
-    SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
-
-    ExchangeRateDaily exchangeRate = new ExchangeRateDaily(formatter.parse(date), usdToNtd, rmbToNtd, usdToRmb);
+      @RequestBody RequestExchangeRateDTO dto
+  ) {
+    ExchangeRateDaily exchangeRate = new ExchangeRateDaily(dto.getDate(), dto.getUsdToNtd(), dto.getRmbToNtd(), dto.getUsdToRmb());
     this.exchangeRateService.add(exchangeRate);
 
     return new ResponseEntity<>("Add Success", HttpStatus.OK);
