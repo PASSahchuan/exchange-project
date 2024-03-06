@@ -59,6 +59,7 @@ public class ExchangeRateController {
    */
   @GetMapping("getRate")
   public ResponseEntity<ResponseExchangeRateDTO> getRate(@RequestParam Date date) {
+    log.info(date.toString());
     ResponseExchangeRateDTO response = this.exchangeRateService.getRate(date);
     return new ResponseEntity<>(response, HttpStatus.OK);
   }

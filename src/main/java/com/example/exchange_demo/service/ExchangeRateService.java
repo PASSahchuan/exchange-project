@@ -108,7 +108,8 @@ public class ExchangeRateService {
     SimpleDateFormat responseFormatter = new SimpleDateFormat("yyyy-MM-dd");
     Optional<ExchangeRateDaily> exchange = this.exchangeRateDailyRepository.findById(date);
 
-    exchange.orElseThrow();
+//    exchange.orElseThrow();
+    log.info(exchange.toString());
 
     ExchangeRateDaily data = exchange.get();
     ResponseExchangeRateDTO response = new ResponseExchangeRateDTO(responseFormatter.format(data.getDate()), data.getUsdToNtd(), data.getRmdToNtd(), data.getUsdToRmb());
@@ -117,6 +118,7 @@ public class ExchangeRateService {
   }
 
   public void update(ExchangeRateDaily exchangeRateDaily) throws Exception {
+    log.info(exchangeRateDaily.toString());
     if (this.exchangeRateDailyRepository.findById(exchangeRateDaily.getDate()).isEmpty()) {
       throw new CustomException("欲修改之資料不存在");
     }

@@ -4,9 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
-public class ExchangeRateDTO {
-  @JsonProperty("Date")
-  private String date;
+public class ExchangeRateDTO extends DateDTO {
 
   @JsonProperty("USD/NTD")
   private Float usdToNtd;
