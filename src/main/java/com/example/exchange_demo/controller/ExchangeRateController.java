@@ -6,12 +6,12 @@ import com.example.exchange_demo.model.ExchangeRateDaily;
 import com.example.exchange_demo.service.ExchangeRateService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -58,7 +58,8 @@ public class ExchangeRateController {
    * @return 單日匯率
    */
   @GetMapping("getRate")
-  public ResponseEntity<ResponseExchangeRateDTO> getRate(@RequestParam Date date) {
+  public ResponseEntity<ResponseExchangeRateDTO> getRate(@RequestParam("date")
+                                                           @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date date) {
     log.info(date.toString());
     ResponseExchangeRateDTO response = this.exchangeRateService.getRate(date);
     return new ResponseEntity<>(response, HttpStatus.OK);
@@ -96,7 +97,8 @@ public class ExchangeRateController {
    * @throws ParseException
    */
   @DeleteMapping("/delete")
-  public ResponseEntity<String> delete(@RequestParam String date) throws ParseException {
+  public ResponseEntity<String> delete(@RequestParam("date")
+                                         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date date) {
 
     this.exchangeRateService.delete(date);
 

@@ -33,13 +33,8 @@ public class ExchangeRateService {
     this.exchangeRateDailyRepository.save(exchangeRate);
   }
 
-  public void delete(String date) throws ParseException {
-    SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
-    try {
-      this.exchangeRateDailyRepository.deleteById(formatter.parse(date));
-    } catch (ParseException e) {
-      throw new CustomException(e.getMessage());
-    }
+  public void delete(Date date) {
+    this.exchangeRateDailyRepository.deleteById(date);
   }
 
   public List<ResponseExchangeRateDTO> getRates() throws ParseException {
@@ -83,7 +78,7 @@ public class ExchangeRateService {
   public List<ResponseExchangeRateDTO> getRatesPageable(Integer pageNo, Integer size) {
     SimpleDateFormat responseFormatter = new SimpleDateFormat("yyyy-MM-dd");
 
-    if (pageNo <= 0) {
+    if (pageNo < 0) {
       throw new CustomException("頁數輸入錯誤，應大於0");
     }
 
@@ -108,17 +103,14 @@ public class ExchangeRateService {
     SimpleDateFormat responseFormatter = new SimpleDateFormat("yyyy-MM-dd");
     Optional<ExchangeRateDaily> exchange = this.exchangeRateDailyRepository.findById(date);
 
-//    exchange.orElseThrow();
-    log.info(exchange.toString());
-
     ExchangeRateDaily data = exchange.get();
     ResponseExchangeRateDTO response = new ResponseExchangeRateDTO(responseFormatter.format(data.getDate()), data.getUsdToNtd(), data.getRmdToNtd(), data.getUsdToRmb());
 
     return response;
   }
 
-  public void update(ExchangeRateDaily exchangeRateDaily) throws Exception {
-    log.info(exchangeRateDaily.toString());
+  public void update(ExchangeRateDaily exchangeRateDaily) {
+
     if (this.exchangeRateDailyRepository.findById(exchangeRateDaily.getDate()).isEmpty()) {
       throw new CustomException("欲修改之資料不存在");
     }
